@@ -1,0 +1,1193 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, viewport-fit=cover"
+        />
+        <meta name="theme-color" content="#1d0a19" />
+        <title>An Invitation — 7:00 PM</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Italiana&family=Pinyon+Script&display=swap"
+            rel="stylesheet"
+        />
+
+        <style>
+            :root {
+                --ink-plum: #1d0a19;
+                --wine: #5b0f36;
+                --rose: #ff5c8a;
+                --blush: #ffc7d9;
+                --cream: #fff1f4;
+                --gilt: #e8c39e;
+
+                --paper: rgba(255, 241, 244, 0.06);
+                --edge: rgba(255, 199, 217, 0.28);
+
+                --display: "Italiana", "Cormorant Garamond", Georgia, serif;
+                --body: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+                --script: "Pinyon Script", "Cormorant Garamond", cursive;
+                --util:
+                    ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica,
+                    Arial, sans-serif;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            html,
+            body {
+                height: 100%;
+            }
+
+            body {
+                margin: 0;
+                min-height: 100svh;
+                font-family: var(--body);
+                color: var(--cream);
+                background:
+                    radial-gradient(
+                        120% 90% at 18% 8%,
+                        #7a1745 0%,
+                        rgba(122, 23, 69, 0) 55%
+                    ),
+                    radial-gradient(
+                        110% 80% at 88% 92%,
+                        #a8265c 0%,
+                        rgba(168, 38, 92, 0) 52%
+                    ),
+                    linear-gradient(
+                        165deg,
+                        #240b20 0%,
+                        #4a0f31 48%,
+                        #1d0a19 100%
+                    );
+                overflow: hidden;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            #bg {
+                position: fixed;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                display: block;
+                z-index: 0;
+            }
+
+            .vignette {
+                position: fixed;
+                inset: 0;
+                z-index: 1;
+                pointer-events: none;
+                background: radial-gradient(
+                    75% 60% at 50% 45%,
+                    rgba(0, 0, 0, 0) 40%,
+                    rgba(20, 4, 16, 0.72) 100%
+                );
+            }
+
+            .flash {
+                position: fixed;
+                inset: 0;
+                z-index: 6;
+                pointer-events: none;
+                background: radial-gradient(
+                    circle at 50% 60%,
+                    rgba(255, 214, 228, 0.95),
+                    rgba(255, 92, 138, 0.35) 45%,
+                    rgba(255, 92, 138, 0) 70%
+                );
+                opacity: 0;
+            }
+            .flash.fire {
+                animation: flash 0.9s ease-out forwards;
+            }
+            @keyframes flash {
+                0% {
+                    opacity: 0;
+                }
+                12% {
+                    opacity: 0.85;
+                }
+                100% {
+                    opacity: 0;
+                }
+            }
+
+            .stage {
+                position: relative;
+                z-index: 2;
+                min-height: 100svh;
+                display: grid;
+                place-items: center;
+                padding: clamp(16px, 4vw, 40px);
+            }
+
+            /* ---------- the ticket ---------- */
+            .ticket {
+                position: relative;
+                width: min(760px, 100%);
+                display: flex;
+                align-items: stretch;
+                border-radius: 22px;
+                background: linear-gradient(
+                    150deg,
+                    rgba(255, 241, 244, 0.1),
+                    rgba(255, 241, 244, 0.04)
+                );
+                border: 1px solid var(--edge);
+                box-shadow:
+                    0 40px 90px -30px rgba(10, 2, 10, 0.85),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+                backdrop-filter: blur(14px) saturate(120%);
+                -webkit-backdrop-filter: blur(14px) saturate(120%);
+                overflow: hidden;
+                opacity: 0;
+                transform: translateY(26px) scale(0.985);
+                animation: rise 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s
+                    forwards;
+                transition:
+                    opacity 0.55s ease,
+                    transform 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+                    filter 0.55s ease;
+            }
+            @keyframes rise {
+                to {
+                    opacity: 1;
+                    transform: none;
+                }
+            }
+
+            .ticket.dismissed {
+                opacity: 0;
+                transform: translateY(-18px) scale(0.94);
+                filter: blur(6px);
+                pointer-events: none;
+            }
+
+            .ticket__main {
+                flex: 1 1 auto;
+                padding: clamp(28px, 5vw, 52px) clamp(24px, 5vw, 52px);
+                text-align: center;
+            }
+
+            /* perforated divider + notches */
+            .ticket__stub {
+                position: relative;
+                flex: 0 0 clamp(120px, 20%, 170px);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                padding: 26px 12px;
+                background: linear-gradient(
+                    180deg,
+                    rgba(255, 92, 138, 0.16),
+                    rgba(255, 92, 138, 0.05)
+                );
+                border-left: 1px dashed rgba(255, 199, 217, 0.45);
+            }
+            .ticket__stub::before,
+            .ticket__stub::after {
+                content: "";
+                position: absolute;
+                left: -11px;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: #2a0b21;
+                box-shadow: inset 0 0 0 1px rgba(255, 199, 217, 0.22);
+            }
+            .ticket__stub::before {
+                top: -11px;
+            }
+            .ticket__stub::after {
+                bottom: -11px;
+            }
+
+            .eyebrow {
+                margin: 0 0 18px;
+                font-family: var(--util);
+                font-size: 11px;
+                font-weight: 500;
+                letter-spacing: 0.42em;
+                text-transform: uppercase;
+                color: var(--gilt);
+                opacity: 0.9;
+            }
+
+            h1 {
+                margin: 0 0 6px;
+                font-family: var(--display);
+                font-weight: 400;
+                font-size: clamp(38px, 8vw, 68px);
+                line-height: 1.02;
+                letter-spacing: 0.01em;
+                color: var(--cream);
+                text-shadow: 0 0 40px rgba(255, 92, 138, 0.35);
+            }
+
+            .name {
+                display: block;
+                font-family: var(--script);
+                font-size: clamp(30px, 6.2vw, 52px);
+                color: var(--blush);
+                line-height: 1.35;
+                margin-bottom: 10px;
+            }
+
+            .lede {
+                margin: 22px auto 0;
+                max-width: 46ch;
+                font-size: clamp(19px, 2.6vw, 25px);
+                font-weight: 300;
+                line-height: 1.62;
+                color: rgba(255, 241, 244, 0.94);
+            }
+            .lede em {
+                font-style: italic;
+                color: var(--blush);
+            }
+            .hl {
+                color: var(--gilt);
+                white-space: nowrap;
+                border-bottom: 1px solid rgba(232, 195, 158, 0.5);
+                padding-bottom: 1px;
+            }
+
+            .sub {
+                margin: 14px auto 0;
+                max-width: 42ch;
+                font-size: clamp(15px, 2.1vw, 18px);
+                font-style: italic;
+                font-weight: 300;
+                color: rgba(255, 199, 217, 0.78);
+                line-height: 1.6;
+            }
+
+            .rule {
+                width: 56px;
+                height: 1px;
+                margin: 30px auto 0;
+                background: linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(232, 195, 158, 0.7),
+                    transparent
+                );
+            }
+
+            /* stub data */
+            .stub-label {
+                font-family: var(--util);
+                font-size: 9px;
+                letter-spacing: 0.3em;
+                text-transform: uppercase;
+                color: rgba(255, 199, 217, 0.7);
+            }
+            .stub-time {
+                font-family: var(--display);
+                font-size: clamp(30px, 4.6vw, 42px);
+                line-height: 1;
+                color: var(--cream);
+            }
+            .stub-meridiem {
+                font-family: var(--util);
+                font-size: 11px;
+                letter-spacing: 0.34em;
+                color: var(--gilt);
+                margin-top: 2px;
+            }
+            .stub-seat {
+                margin-top: 16px;
+                font-family: var(--body);
+                font-style: italic;
+                font-size: 14px;
+                color: rgba(255, 241, 244, 0.82);
+                text-align: center;
+                line-height: 1.35;
+            }
+
+            /* ---------- buttons ---------- */
+            .actions {
+                margin-top: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 16px;
+                flex-wrap: wrap;
+                min-height: 58px;
+            }
+
+            .btn {
+                font-family: var(--body);
+                font-size: 19px;
+                font-weight: 500;
+                letter-spacing: 0.03em;
+                padding: 14px 34px;
+                border-radius: 999px;
+                border: 1px solid transparent;
+                cursor: pointer;
+                transition:
+                    transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+                    box-shadow 0.3s ease,
+                    background 0.3s ease,
+                    color 0.3s ease;
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
+            .btn:focus-visible {
+                outline: 2px solid var(--gilt);
+                outline-offset: 3px;
+            }
+
+            .btn--yes {
+                color: #3d0620;
+                background: linear-gradient(
+                    150deg,
+                    #ffe3ec,
+                    #ff9dba 55%,
+                    #ff5c8a
+                );
+                box-shadow:
+                    0 14px 34px -12px rgba(255, 92, 138, 0.9),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+                transform-origin: center;
+                animation: beat 2.6s ease-in-out 1.4s infinite;
+            }
+            .btn--yes:hover {
+                box-shadow:
+                    0 18px 44px -10px rgba(255, 92, 138, 1),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            }
+            @keyframes beat {
+                0%,
+                100% {
+                    box-shadow:
+                        0 14px 34px -12px rgba(255, 92, 138, 0.9),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.7);
+                }
+                50% {
+                    box-shadow:
+                        0 18px 52px -8px rgba(255, 92, 138, 1),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.85);
+                }
+            }
+
+            .btn--no {
+                color: rgba(255, 241, 244, 0.85);
+                background: rgba(255, 241, 244, 0.06);
+                border-color: rgba(255, 199, 217, 0.35);
+            }
+
+            /* once it starts running away */
+            .btn--no.loose {
+                position: fixed;
+                z-index: 5;
+                margin: 0;
+                white-space: nowrap;
+            }
+            .btn--no.hop {
+                animation: hop 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+            @keyframes hop {
+                0% {
+                    transform: scale(0.86) rotate(-4deg);
+                }
+                100% {
+                    transform: scale(1) rotate(0deg);
+                }
+            }
+
+            .ghost {
+                display: inline-block;
+            }
+
+            .hint {
+                margin: 20px 0 0;
+                font-family: var(--util);
+                font-size: 11px;
+                letter-spacing: 0.22em;
+                text-transform: uppercase;
+                color: rgba(255, 199, 217, 0.5);
+                transition: opacity 0.4s ease;
+            }
+
+            /* ---------- the answer ---------- */
+            .answer {
+                position: absolute;
+                width: min(680px, 100%);
+                text-align: center;
+                padding: clamp(24px, 5vw, 44px);
+                opacity: 0;
+                transform: translateY(28px) scale(0.96);
+                pointer-events: none;
+                transition:
+                    opacity 0.9s ease,
+                    transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1);
+            }
+            .answer.show {
+                opacity: 1;
+                transform: none;
+                pointer-events: auto;
+            }
+
+            .stamp {
+                display: inline-block;
+                margin: 0 auto 22px;
+                padding: 9px 22px;
+                border: 2px solid rgba(232, 195, 158, 0.75);
+                border-radius: 6px;
+                font-family: var(--util);
+                font-size: 11px;
+                letter-spacing: 0.42em;
+                text-transform: uppercase;
+                color: var(--gilt);
+                transform: rotate(-6deg);
+                box-shadow: 0 0 30px rgba(232, 195, 158, 0.18);
+            }
+
+            .answer h2 {
+                margin: 0;
+                font-family: var(--script);
+                font-weight: 400;
+                font-size: clamp(52px, 13vw, 104px);
+                line-height: 1.1;
+                color: var(--cream);
+                text-shadow: 0 0 46px rgba(255, 92, 138, 0.6);
+            }
+
+            .answer p {
+                margin: 20px auto 0;
+                max-width: 44ch;
+                font-size: clamp(18px, 2.5vw, 23px);
+                font-weight: 300;
+                line-height: 1.65;
+                color: rgba(255, 241, 244, 0.92);
+            }
+
+            .countdown {
+                margin-top: 30px;
+                display: inline-flex;
+                align-items: baseline;
+                gap: 10px;
+                padding: 14px 26px;
+                border-radius: 999px;
+                border: 1px solid rgba(255, 199, 217, 0.3);
+                background: rgba(255, 241, 244, 0.06);
+                font-family: var(--util);
+                font-size: 12px;
+                letter-spacing: 0.26em;
+                text-transform: uppercase;
+                color: rgba(255, 199, 217, 0.85);
+            }
+            .countdown b {
+                font-family: var(--display);
+                font-size: 26px;
+                font-weight: 400;
+                letter-spacing: 0.04em;
+                color: var(--cream);
+            }
+
+            .signature {
+                margin-top: 34px !important;
+                font-family: var(--script);
+                font-size: clamp(26px, 4.4vw, 36px);
+                color: var(--blush);
+            }
+
+            /* ---------- responsive ---------- */
+            @media (max-width: 640px) {
+                .ticket {
+                    flex-direction: column;
+                }
+                .ticket__stub {
+                    flex: 0 0 auto;
+                    flex-direction: row;
+                    gap: 14px;
+                    border-left: none;
+                    border-top: 1px dashed rgba(255, 199, 217, 0.45);
+                    padding: 18px 16px;
+                    background: linear-gradient(
+                        90deg,
+                        rgba(255, 92, 138, 0.16),
+                        rgba(255, 92, 138, 0.05)
+                    );
+                }
+                .ticket__stub::before,
+                .ticket__stub::after {
+                    top: -11px;
+                    bottom: auto;
+                    left: auto;
+                }
+                .ticket__stub::before {
+                    left: -11px;
+                }
+                .ticket__stub::after {
+                    right: -11px;
+                }
+                .stub-seat {
+                    margin-top: 0;
+                    text-align: left;
+                }
+                .stub-block {
+                    display: flex;
+                    align-items: baseline;
+                    gap: 8px;
+                }
+                .actions {
+                    gap: 12px;
+                }
+                .btn {
+                    font-size: 18px;
+                    padding: 13px 28px;
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                * {
+                    animation-duration: 0.01ms !important;
+                    animation-iteration-count: 1 !important;
+                    transition-duration: 0.2s !important;
+                }
+                .ticket {
+                    opacity: 1;
+                    transform: none;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="bg" aria-hidden="true"></canvas>
+        <div class="vignette" aria-hidden="true"></div>
+        <div class="flash" id="flash" aria-hidden="true"></div>
+
+        <main class="stage">
+            <!-- THE INVITATION -->
+            <section class="ticket" id="ticket">
+                <div class="ticket__main">
+                    <p class="eyebrow">Admit one · tonight only</p>
+
+                    <h1>
+                        <span class="name">My love,</span>
+                        will you come?
+                    </h1>
+
+                    <p class="lede">
+                        I love you endlessly and I really want to see you at my
+                        lecture today at
+                        <span class="hl">7:00&nbsp;PM</span>.
+                    </p>
+
+                    <p class="sub">
+                        I'll be talking to a whole room — but I'll only be
+                        speaking to one person in it.
+                    </p>
+
+                    <div class="rule" aria-hidden="true"></div>
+
+                    <div class="actions" id="actions">
+                        <button class="btn btn--yes" id="yesBtn" type="button">
+                            Yes, I'll be there
+                        </button>
+                        <button class="btn btn--no" id="noBtn" type="button">
+                            No
+                        </button>
+                    </div>
+
+                    <p class="hint" id="hint">
+                        One of these buttons is a little shy
+                    </p>
+                </div>
+
+                <aside class="ticket__stub" aria-hidden="true">
+                    <div class="stub-block">
+                        <div>
+                            <div class="stub-label">Doors</div>
+                            <div class="stub-time">7:00</div>
+                            <div class="stub-meridiem">PM</div>
+                        </div>
+                    </div>
+                    <div class="stub-seat">
+                        Seat reserved:<br />right beside my heart
+                    </div>
+                </aside>
+            </section>
+
+            <!-- THE ANSWER -->
+            <section class="answer" id="answer" aria-hidden="true">
+                <span class="stamp">Admitted · forever</span>
+                <h2>You said yes</h2>
+                <p>
+                    Then it's settled. Tonight I'll speak, and the room will
+                    listen — but every time I look up, I'll be looking for you.
+                    Thank you for being the best part of every single day of
+                    mine.
+                </p>
+                <div class="countdown" id="countdown">
+                    <b id="cdValue">—</b>
+                    <span id="cdLabel">until I see you</span>
+                </div>
+                <p class="signature">Yours, endlessly</p>
+            </section>
+        </main>
+
+        <script>
+            (function () {
+                "use strict";
+
+                /* =========================================================
+     1. CANVAS — rising hearts, soft bokeh, quiet stars
+     ========================================================= */
+                var canvas = document.getElementById("bg");
+                var ctx = canvas.getContext("2d");
+                var w = 0,
+                    h = 0,
+                    dpr = 1;
+                var reduced = window.matchMedia(
+                    "(prefers-reduced-motion: reduce)",
+                ).matches;
+
+                var PALETTE = [
+                    "#ff5c8a",
+                    "#ff87a8",
+                    "#ffc7d9",
+                    "#ff3d6e",
+                    "#ffe0e9",
+                    "#e8c39e",
+                ];
+
+                function rand(a, b) {
+                    return a + Math.random() * (b - a);
+                }
+                function pick(arr) {
+                    return arr[(Math.random() * arr.length) | 0];
+                }
+
+                function resize() {
+                    dpr = Math.min(window.devicePixelRatio || 1, 2);
+                    w = window.innerWidth;
+                    h = window.innerHeight;
+                    canvas.width = Math.floor(w * dpr);
+                    canvas.height = Math.floor(h * dpr);
+                    canvas.style.width = w + "px";
+                    canvas.style.height = h + "px";
+                    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                }
+                resize();
+
+                function heartPath(s) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0.36 * s);
+                    ctx.bezierCurveTo(
+                        -0.62 * s,
+                        -0.16 * s,
+                        -0.5 * s,
+                        -0.68 * s,
+                        0,
+                        -0.3 * s,
+                    );
+                    ctx.bezierCurveTo(
+                        0.5 * s,
+                        -0.68 * s,
+                        0.62 * s,
+                        -0.16 * s,
+                        0,
+                        0.36 * s,
+                    );
+                    ctx.closePath();
+                }
+
+                function drawHeart(x, y, s, rot, color, alpha, glow) {
+                    ctx.save();
+                    ctx.translate(x, y);
+                    ctx.rotate(rot);
+                    ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+                    ctx.fillStyle = color;
+                    if (glow) {
+                        ctx.shadowColor = color;
+                        ctx.shadowBlur = glow;
+                    }
+                    heartPath(s);
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                /* --- ambient layers --- */
+                var stars = [],
+                    orbs = [],
+                    hearts = [],
+                    sparks = [];
+
+                function buildAmbient() {
+                    stars.length = 0;
+                    orbs.length = 0;
+                    hearts.length = 0;
+
+                    var small = w < 640;
+                    var starCount = reduced ? 40 : small ? 70 : 140;
+                    var orbCount = reduced ? 4 : small ? 6 : 10;
+                    var heartCount = reduced ? 10 : small ? 20 : 36;
+
+                    var i;
+                    for (i = 0; i < starCount; i++) {
+                        stars.push({
+                            x: Math.random() * w,
+                            y: Math.random() * h,
+                            r: rand(0.4, 1.5),
+                            p: Math.random() * Math.PI * 2,
+                            sp: rand(0.6, 2.0),
+                        });
+                    }
+                    for (i = 0; i < orbCount; i++) {
+                        orbs.push({
+                            x: Math.random() * w,
+                            y: Math.random() * h,
+                            r: rand(90, 260),
+                            vx: rand(-0.1, 0.1),
+                            vy: rand(-0.07, 0.04),
+                            c: pick([
+                                "255,92,138",
+                                "255,199,217",
+                                "232,195,158",
+                                "168,38,92",
+                            ]),
+                            a: rand(0.05, 0.13),
+                        });
+                    }
+                    for (i = 0; i < heartCount; i++)
+                        hearts.push(makeHeart(true));
+                }
+
+                function makeHeart(scatter) {
+                    return {
+                        x: Math.random() * w,
+                        y: scatter ? Math.random() * h : h + rand(20, 140),
+                        s: rand(9, 30) * (w < 640 ? 0.85 : 1),
+                        vy: rand(0.22, 0.75) * (reduced ? 0.4 : 1),
+                        sway: rand(0.4, 1.5),
+                        phase: Math.random() * Math.PI * 2,
+                        freq: rand(0.4, 1.1),
+                        rot: rand(-0.35, 0.35),
+                        vr: rand(-0.006, 0.006),
+                        a: rand(0.25, 0.8),
+                        c: pick(PALETTE),
+                    };
+                }
+
+                /* --- celebration bursts --- */
+                function burst(x, y, count, power) {
+                    if (sparks.length > 900) return;
+                    for (var i = 0; i < count; i++) {
+                        var ang = Math.random() * Math.PI * 2;
+                        var spd = rand(power * 0.35, power);
+                        var isHeart = Math.random() < 0.72;
+                        sparks.push({
+                            x: x,
+                            y: y,
+                            vx: Math.cos(ang) * spd,
+                            vy: Math.sin(ang) * spd - rand(0.4, 1.8),
+                            s: isHeart ? rand(8, 24) : rand(1.6, 3.4),
+                            heart: isHeart,
+                            rot: Math.random() * Math.PI * 2,
+                            vr: rand(-0.12, 0.12),
+                            life: 0,
+                            max: rand(70, 150),
+                            c: pick(PALETTE),
+                        });
+                    }
+                }
+
+                function bloom(x, y, radius, count) {
+                    for (var i = 0; i < count; i++) {
+                        var ang = (i / count) * Math.PI * 2;
+                        sparks.push({
+                            x: x + Math.cos(ang) * 8,
+                            y: y + Math.sin(ang) * 8,
+                            vx: Math.cos(ang) * (radius / 22),
+                            vy: Math.sin(ang) * (radius / 22) - 0.6,
+                            s: rand(14, 30),
+                            heart: true,
+                            rot: ang + Math.PI / 2,
+                            vr: rand(-0.05, 0.05),
+                            life: 0,
+                            max: rand(90, 160),
+                            c: pick(PALETTE),
+                        });
+                    }
+                }
+
+                /* --- render loop --- */
+                var last = performance.now();
+
+                function frame(now) {
+                    var dt = Math.min((now - last) / 16.667, 3);
+                    last = now;
+                    var t = now / 1000;
+
+                    ctx.clearRect(0, 0, w, h);
+
+                    // bokeh
+                    ctx.globalCompositeOperation = "lighter";
+                    for (var i = 0; i < orbs.length; i++) {
+                        var o = orbs[i];
+                        o.x += o.vx * dt;
+                        o.y += o.vy * dt;
+                        if (o.x < -o.r) o.x = w + o.r;
+                        if (o.x > w + o.r) o.x = -o.r;
+                        if (o.y < -o.r) o.y = h + o.r;
+                        if (o.y > h + o.r) o.y = -o.r;
+                        var g = ctx.createRadialGradient(
+                            o.x,
+                            o.y,
+                            0,
+                            o.x,
+                            o.y,
+                            o.r,
+                        );
+                        g.addColorStop(0, "rgba(" + o.c + "," + o.a + ")");
+                        g.addColorStop(1, "rgba(" + o.c + ",0)");
+                        ctx.fillStyle = g;
+                        ctx.beginPath();
+                        ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+
+                    // stars
+                    for (var j = 0; j < stars.length; j++) {
+                        var s = stars[j];
+                        var tw =
+                            0.35 +
+                            0.65 * (0.5 + 0.5 * Math.sin(t * s.sp + s.p));
+                        ctx.globalAlpha = tw * 0.75;
+                        ctx.fillStyle = "#fff1f4";
+                        ctx.beginPath();
+                        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    ctx.globalAlpha = 1;
+                    ctx.globalCompositeOperation = "source-over";
+
+                    // floating hearts
+                    for (var k = 0; k < hearts.length; k++) {
+                        var p = hearts[k];
+                        p.y -= p.vy * dt;
+                        p.x +=
+                            Math.sin(t * p.freq + p.phase) * p.sway * 0.6 * dt;
+                        p.rot += p.vr * dt;
+                        if (p.y < -60) {
+                            hearts[k] = makeHeart(false);
+                            continue;
+                        }
+                        drawHeart(p.x, p.y, p.s, p.rot, p.c, p.a, 18);
+                    }
+
+                    // bursts
+                    for (var m = sparks.length - 1; m >= 0; m--) {
+                        var q = sparks[m];
+                        q.life += dt;
+                        if (q.life > q.max) {
+                            sparks.splice(m, 1);
+                            continue;
+                        }
+                        q.vy += 0.045 * dt; // gravity
+                        q.vx *= Math.pow(0.985, dt);
+                        q.vy *= Math.pow(0.988, dt);
+                        q.x += q.vx * dt;
+                        q.y += q.vy * dt;
+                        q.rot += q.vr * dt;
+                        var fade = 1 - q.life / q.max;
+                        if (q.heart) {
+                            drawHeart(q.x, q.y, q.s, q.rot, q.c, fade, 22);
+                        } else {
+                            ctx.save();
+                            ctx.globalAlpha = fade;
+                            ctx.fillStyle = q.c;
+                            ctx.shadowColor = q.c;
+                            ctx.shadowBlur = 14;
+                            ctx.beginPath();
+                            ctx.arc(q.x, q.y, q.s, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.restore();
+                        }
+                    }
+
+                    requestAnimationFrame(frame);
+                }
+
+                buildAmbient();
+                requestAnimationFrame(frame);
+
+                var resizeTimer;
+                window.addEventListener("resize", function () {
+                    resize();
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(function () {
+                        buildAmbient();
+                        keepNoInside();
+                    }, 180);
+                });
+
+                /* =========================================================
+     2. THE SHY BUTTON
+     ========================================================= */
+                var yesBtn = document.getElementById("yesBtn");
+                var noBtn = document.getElementById("noBtn");
+                var hint = document.getElementById("hint");
+                var actions = document.getElementById("actions");
+                var answered = false;
+                var dodges = 0;
+                var ghost = null;
+
+                var LINES = [
+                    "No",
+                    "Are you sure?",
+                    "Think again",
+                    "Really really sure?",
+                    "Catch me first",
+                    "Not a chance",
+                    "My heart says no",
+                    "This one is broken",
+                    "Try the pink one",
+                ];
+
+                function detachNo() {
+                    if (noBtn.classList.contains("loose")) return;
+                    var r = noBtn.getBoundingClientRect();
+
+                    // keep the layout from collapsing when the button leaves the row
+                    ghost = document.createElement("span");
+                    ghost.className = "ghost";
+                    ghost.style.width = r.width + "px";
+                    ghost.style.height = r.height + "px";
+                    actions.insertBefore(ghost, noBtn);
+
+                    noBtn.style.width = r.width + "px";
+                    noBtn.style.height = r.height + "px";
+                    noBtn.style.left = r.left + "px";
+                    noBtn.style.top = r.top + "px";
+                    noBtn.classList.add("loose");
+
+                    // move it out of the blurred card, otherwise backdrop-filter traps position:fixed
+                    document.body.appendChild(noBtn);
+                }
+
+                function tooClose(x, y, bw, bh, target, pad) {
+                    return !(
+                        x + bw + pad < target.left ||
+                        x > target.right + pad ||
+                        y + bh + pad < target.top ||
+                        y > target.bottom + pad
+                    );
+                }
+
+                function dodge() {
+                    if (answered) return;
+                    detachNo();
+
+                    var bw = noBtn.offsetWidth;
+                    var bh = noBtn.offsetHeight;
+                    var pad = 14;
+                    var maxX = Math.max(pad, w - bw - pad);
+                    var maxY = Math.max(pad, h - bh - pad);
+
+                    var yr = yesBtn.getBoundingClientRect();
+                    var x,
+                        y,
+                        tries = 0;
+                    do {
+                        x = rand(pad, maxX);
+                        y = rand(pad, maxY);
+                        tries++;
+                    } while (tries < 40 && tooClose(x, y, bw, bh, yr, 28));
+
+                    noBtn.style.left = x + "px";
+                    noBtn.style.top = y + "px";
+
+                    noBtn.classList.remove("hop");
+                    void noBtn.offsetWidth; // restart the animation
+                    noBtn.classList.add("hop");
+
+                    dodges++;
+                    noBtn.textContent =
+                        LINES[Math.min(dodges, LINES.length - 1)];
+
+                    // the yes button grows a little braver each time
+                    var scale = Math.min(1 + dodges * 0.055, 1.55);
+                    yesBtn.style.transform = "scale(" + scale.toFixed(3) + ")";
+
+                    if (dodges === 2 && hint) hint.textContent = "Told you";
+                    if (dodges === 5 && hint)
+                        hint.textContent = "It is never going to let you";
+                    if (dodges >= 8 && hint) hint.style.opacity = "0";
+
+                    // a tiny puff of hearts where it used to be
+                    burst(x + bw / 2, y + bh / 2, 6, 2.2);
+                }
+
+                function keepNoInside() {
+                    if (!noBtn.classList.contains("loose")) return;
+                    var bw = noBtn.offsetWidth,
+                        bh = noBtn.offsetHeight;
+                    var x = Math.min(
+                        parseFloat(noBtn.style.left) || 0,
+                        Math.max(14, w - bw - 14),
+                    );
+                    var y = Math.min(
+                        parseFloat(noBtn.style.top) || 0,
+                        Math.max(14, h - bh - 14),
+                    );
+                    noBtn.style.left = Math.max(14, x) + "px";
+                    noBtn.style.top = Math.max(14, y) + "px";
+                }
+
+                // desktop: hover anywhere near it and it bolts
+                noBtn.addEventListener("mouseenter", dodge);
+                noBtn.addEventListener("pointerenter", dodge);
+                noBtn.addEventListener("focus", dodge);
+
+                window.addEventListener(
+                    "pointermove",
+                    function (e) {
+                        if (answered || e.pointerType === "touch") return;
+                        var r = noBtn.getBoundingClientRect();
+                        var nx = Math.max(r.left, Math.min(e.clientX, r.right));
+                        var ny = Math.max(r.top, Math.min(e.clientY, r.bottom));
+                        if (Math.hypot(e.clientX - nx, e.clientY - ny) < 70)
+                            dodge();
+                    },
+                    { passive: true },
+                );
+
+                // touch: it jumps before the tap can land
+                noBtn.addEventListener(
+                    "touchstart",
+                    function (e) {
+                        e.preventDefault();
+                        dodge();
+                    },
+                    { passive: false },
+                );
+
+                noBtn.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    dodge();
+                });
+
+                /* =========================================================
+     3. SHE SAID YES
+     ========================================================= */
+                var ticket = document.getElementById("ticket");
+                var answer = document.getElementById("answer");
+                var flash = document.getElementById("flash");
+                var cdValue = document.getElementById("cdValue");
+                var cdLabel = document.getElementById("cdLabel");
+
+                function celebrate() {
+                    if (answered) return;
+                    answered = true;
+
+                    var r = yesBtn.getBoundingClientRect();
+                    var cx = r.left + r.width / 2;
+                    var cy = r.top + r.height / 2;
+
+                    flash.classList.add("fire");
+                    bloom(cx, cy, 300, 42);
+                    burst(cx, cy, 120, 9);
+
+                    noBtn.style.transition = "opacity .35s ease";
+                    noBtn.style.opacity = "0";
+                    setTimeout(function () {
+                        if (noBtn.parentNode)
+                            noBtn.parentNode.removeChild(noBtn);
+                    }, 400);
+                    if (ghost && ghost.parentNode)
+                        ghost.parentNode.removeChild(ghost);
+
+                    ticket.classList.add("dismissed");
+                    ticket.setAttribute("aria-hidden", "true");
+
+                    setTimeout(function () {
+                        answer.setAttribute("aria-hidden", "false");
+                        answer.classList.add("show");
+                        bloom(w / 2, h * 0.5, 380, 30);
+                    }, 620);
+
+                    // fireworks — dense at first, then a steady heartbeat of them
+                    var shots = 0;
+                    var quick = setInterval(function () {
+                        burst(
+                            rand(w * 0.12, w * 0.88),
+                            rand(h * 0.14, h * 0.6),
+                            46,
+                            7.5,
+                        );
+                        if (++shots > 9) {
+                            clearInterval(quick);
+                            setInterval(function () {
+                                burst(
+                                    rand(w * 0.1, w * 0.9),
+                                    rand(h * 0.1, h * 0.6),
+                                    34,
+                                    6.5,
+                                );
+                            }, 2100);
+                        }
+                    }, 520);
+
+                    // extra hearts in the ambient field, forever
+                    for (var i = 0; i < (w < 640 ? 12 : 22); i++)
+                        hearts.push(makeHeart(true));
+
+                    document.title = "See you at 7:00 PM";
+                    startCountdown();
+                }
+
+                yesBtn.addEventListener("click", celebrate);
+
+                /* --- countdown to 7:00 PM today --- */
+                function startCountdown() {
+                    function tick() {
+                        var now = new Date();
+                        var target = new Date(
+                            now.getFullYear(),
+                            now.getMonth(),
+                            now.getDate(),
+                            19,
+                            0,
+                            0,
+                            0,
+                        );
+                        var diff = target - now;
+
+                        if (diff <= 0) {
+                            cdValue.textContent = "It is time";
+                            cdLabel.textContent =
+                                "I am already looking for you";
+                            return;
+                        }
+                        var total = Math.floor(diff / 1000);
+                        var hh = Math.floor(total / 3600);
+                        var mm = Math.floor((total % 3600) / 60);
+                        var ss = total % 60;
+                        var pad = function (n) {
+                            return n < 10 ? "0" + n : "" + n;
+                        };
+                        cdValue.textContent =
+                            pad(hh) + ":" + pad(mm) + ":" + pad(ss);
+                        cdLabel.textContent = "until I see you";
+                        setTimeout(tick, 1000);
+                    }
+                    tick();
+                }
+            })();
+        </script>
+    </body>
+</html>
